@@ -30,28 +30,47 @@ namespace pryFerreyraSP4
 
         private void btnValidarDatos_Click(object sender, EventArgs e)
         {
-            for (int indiceFilas = 0; indiceFilas < dgvVentas.Rows.Count; indiceFilas++)
+            bool datosValidos = true;
 
+            for (int fila = 0; fila < dgvVentas.Rows.Count; fila++)
             {
-                for (int indiceCol = 0; indiceCol < dgvVentas.Rows.Count; ++indiceCol)
+                for (int col = 1; col < dgvVentas.Columns.Count; col++) // empieza en 1 porque la col 0 es el mozo
                 {
-                    if (dgvVentas.Rows[indiceFilas].Cells[indiceCol].Value != null)
-                    {
-                        float contenidoCelda =
-                        float.Parse(dgvVentas.Rows[indiceFilas].Cells[indiceCol].Value.ToString());
+                    var celda = dgvVentas.Rows[fila].Cells[col].Value;
+                    string valor = celda == null ? "" : celda.ToString().Trim();
 
-                        if (float.IsRealNumber(contenidoCelda))
-                        {
-                            dgvVentas.Rows[indiceFilas].Cells[indiceCol].Value = "si";
-                        }
-                        else
-                        {
-                            dgvVentas.Rows[indiceFilas].Cells[indiceCol].Value = "no";
-                        }
+                    // Si está vacío, lo tratamos como error
+                    if (valor == "")
+                    {
+                        datosValidos = false;
+                        dgvVentas.Rows[fila].Cells[col].Style.BackColor = Color.LightCoral;
+                        continue;
                     }
-                    
+
+                    // Intentamos convertir a número
+                    if (float.TryParse(valor, out float numero))
+                    {
+                        // OK, lo guardamos en la matriz
+                        matVentas[fila, col] = numero.ToString();
+                        dgvVentas.Rows[fila].Cells[col].Style.BackColor = Color.White;
+                    }
+                    else
+                    {
+                        datosValidos = false;
+                        dgvVentas.Rows[fila].Cells[col].Style.BackColor = Color.LightCoral;
+                    }
                 }
             }
+
+            if (datosValidos)
+            {
+                MessageBox.Show("Todos los datos son válidos.", "Validación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Hay celdas inválidas o vacías. Corríjalas.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
         }
     }
-}
+
