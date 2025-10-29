@@ -2,75 +2,144 @@ namespace pryFerreyraSP4
 {
     public partial class frmBarLaMilanga : Form
     {
+
+        const int FILAS = 5;
+        const int COLUMNAS = 5;
+        string[,] matVentas = new string[FILAS, COLUMNAS];
         public frmBarLaMilanga()
         {
             InitializeComponent();
+            CargarMozos();
         }
 
-        string[,] matVentas = new string[10, 5];
-
-
-        private void dgvVentas_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void CargarMozos()
         {
+            dgvVentas.Rows.Clear();
+
             dgvVentas.Rows.Add("Julio");
             dgvVentas.Rows.Add("Esteban");
             dgvVentas.Rows.Add("Javier");
             dgvVentas.Rows.Add("Gonzalo");
             dgvVentas.Rows.Add("Alberto");
 
-            dgvVentas.Rows[0].Cells[0].Style.BackColor = Color.Maroon;
-            dgvVentas.Rows[1].Cells[0].Style.BackColor = Color.Maroon;
-            dgvVentas.Rows[2].Cells[0].Style.BackColor = Color.Maroon;
-            dgvVentas.Rows[3].Cells[0].Style.BackColor = Color.Maroon;
-            dgvVentas.Rows[4].Cells[0].Style.BackColor = Color.Maroon;
-
-            dgvVentas.Rows[0].Cells[0].Selected = false;
-            dgvVentas.Rows[0].Cells[0].Selected = true;
+            for (int i = 0; i < dgvVentas.Rows.Count; i++)
+            {
+                dgvVentas.Rows[i].Cells[0].Style.BackColor = Color.Maroon;
+                dgvVentas.Rows[i].Cells[0].Style.ForeColor = Color.White;
+            }
         }
 
-        private void btnValidarDatos_Click(object sender, EventArgs e)
+        private void btnMostrarTotales_Click_1(object sender, EventArgs e)
         {
-            bool datosValidos = true;
+            lstTotales.Items.Clear();
 
-            for (int fila = 0; fila < dgvVentas.Rows.Count; fila++)
+            for (int fila = 0; fila < FILAS; fila++)
             {
-                for (int col = 1; col < dgvVentas.Columns.Count; col++) // empieza en 1 porque la col 0 es el mozo
+                double suma = 0;
+
+                for (int col = 1; col < COLUMNAS; col++)
                 {
-                    var celda = dgvVentas.Rows[fila].Cells[col].Value;
-                    string valor = celda == null ? "" : celda.ToString().Trim();
-
-                    // Si está vacío, lo tratamos como error
-                    if (valor == "")
+                    if (double.TryParse(dgvVentas.Rows[fila].Cells[col].Value?.ToString(), out double valor))
                     {
-                        datosValidos = false;
-                        dgvVentas.Rows[fila].Cells[col].Style.BackColor = Color.LightCoral;
-                        continue;
+                        suma += valor;
                     }
+                }
 
-                    // Intentamos convertir a número
-                    if (float.TryParse(valor, out float numero))
+                string nombre = dgvVentas.Rows[fila].Cells[0].Value.ToString();
+                lstTotales.Items.Add(nombre + " vendió $" + suma.ToString("N2"));
+            }
+        }
+
+        private void btnValidarDatos_Click_1(object sender, EventArgs e)
+        {
+            bool datosCorrectos = true;
+
+            for (int fila = 0; fila < FILAS; fila++)
+            {
+                for (int col = 1; col < COLUMNAS; col++)
+                {
+                    object valorCelda = dgvVentas.Rows[fila].Cells[col].Value;
+                    if (valorCelda == null || valorCelda.ToString() == "")
                     {
-                        // OK, lo guardamos en la matriz
-                        matVentas[fila, col] = numero.ToString();
-                        dgvVentas.Rows[fila].Cells[col].Style.BackColor = Color.White;
+                        datosCorrectos = false;
+                        dgvVentas.Rows[fila].Cells[col].Style.BackColor = Color.LightCoral;
                     }
                     else
                     {
-                        datosValidos = false;
-                        dgvVentas.Rows[fila].Cells[col].Style.BackColor = Color.LightCoral;
+                        float valor;
+                        if (float.TryParse(valorCelda.ToString(), out valor))
+                        {
+                            dgvVentas.Rows[fila].Cells[col].Style.BackColor = Color.White;
+                            matVentas[fila, col] = valor.ToString();
+                        }
+                        else
+                        {
+                            datosCorrectos = false;
+                            dgvVentas.Rows[fila].Cells[col].Style.BackColor = Color.LightCoral;
+                        }
                     }
                 }
             }
 
-            if (datosValidos)
+            if (datosCorrectos)
             {
-                MessageBox.Show("Todos los datos son válidos.", "Validación exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Datos validados correctamente.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show("Hay celdas inválidas o vacías. Corríjalas.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Existen celdas vacías o con errores.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+        private void btnNuevoDia_Click_1(object sender, EventArgs e)
+        {
+            for (int fila = 0; fila < FILAS; fila++)
+            {
+                for (int col = 1; col < COLUMNAS; col++)
+                {
+                    dgvVentas.Rows[fila].Cells[col].Value = "";
+                    dgvVentas.Rows[fila].Cells[col].Style.BackColor = Color.White;
+                }
+            }
+
+            lstTotales.Items.Clear();
+            lblMozo.Text = "";
+            lblImporte.Text = "";
+            MessageBox.Show("Datos limpiados correctamente.", "Nuevo Día", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnMozoDelDia_Click_1(object sender, EventArgs e)
+        {
+            double mayorVenta = -1;
+            string mozoGanador = "";
+
+            for (int fila = 0; fila < FILAS; fila++)
+            {
+                double suma = 0;
+                for (int col = 1; col < COLUMNAS; col++)
+                {
+                    if (double.TryParse(dgvVentas.Rows[fila].Cells[col].Value?.ToString(), out double valor))
+                    {
+                        suma += valor;
+                    }
+                }
+
+                if (suma > mayorVenta)
+                {
+                    mayorVenta = suma;
+                    mozoGanador = dgvVentas.Rows[fila].Cells[0].Value.ToString();
+                }
+            }
+
+            lblMozo.Text = "Mozo del día: " + mozoGanador;
+            lblImporte.Text = "Total: $" + mayorVenta.ToString("N2");
+        }
+
+        private void lstTotales_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
+}
+    
 

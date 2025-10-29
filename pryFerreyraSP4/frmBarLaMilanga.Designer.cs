@@ -37,11 +37,17 @@
             colBebidaSAlch = new DataGridViewTextBoxColumn();
             colBebidasCAlcohol = new DataGridViewTextBoxColumn();
             colPostres = new DataGridViewTextBoxColumn();
-            btnValidarDatos = new Button();
+            lstTotales = new ListBox();
+            gbResultados = new GroupBox();
+            lblImporte = new Label();
+            lblMozo = new Label();
             btnMozoDelDia = new Button();
-            btnMostrarTotales = new Button();
+            lblTituloResultado = new Label();
             btnNuevoDia = new Button();
+            btnMostrarTotales = new Button();
+            btnValidarDatos = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvVentas).BeginInit();
+            gbResultados.SuspendLayout();
             SuspendLayout();
             // 
             // dgvVentas
@@ -59,12 +65,12 @@
             dgvVentas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dgvVentas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvVentas.Columns.AddRange(new DataGridViewColumn[] { colMozo, colComida, colBebidaSAlch, colBebidasCAlcohol, colPostres });
-            dgvVentas.Location = new Point(0, 0);
+            dgvVentas.GridColor = Color.GhostWhite;
+            dgvVentas.Location = new Point(10, 10);
             dgvVentas.Name = "dgvVentas";
             dgvVentas.RowHeadersVisible = false;
-            dgvVentas.Size = new Size(504, 253);
+            dgvVentas.Size = new Size(504, 167);
             dgvVentas.TabIndex = 0;
-            dgvVentas.CellContentClick += dgvVentas_CellContentClick;
             // 
             // colMozo
             // 
@@ -88,62 +94,129 @@
             // 
             // colPostres
             // 
-            colPostres.HeaderText = "Postes";
+            colPostres.HeaderText = "Postres";
             colPostres.Name = "colPostres";
             // 
-            // btnValidarDatos
+            // lstTotales
             // 
-            btnValidarDatos.Location = new Point(530, 30);
-            btnValidarDatos.Name = "btnValidarDatos";
-            btnValidarDatos.Size = new Size(91, 29);
-            btnValidarDatos.TabIndex = 1;
-            btnValidarDatos.Text = "Validar Datos";
-            btnValidarDatos.UseVisualStyleBackColor = true;
-            btnValidarDatos.Click += btnValidarDatos_Click;
+            lstTotales.FormattingEnabled = true;
+            lstTotales.ItemHeight = 15;
+            lstTotales.Location = new Point(28, 229);
+            lstTotales.Name = "lstTotales";
+            lstTotales.Size = new Size(199, 229);
+            lstTotales.TabIndex = 8;
+            lstTotales.SelectedIndexChanged += lstTotales_SelectedIndexChanged;
+            // 
+            // gbResultados
+            // 
+            gbResultados.BackColor = SystemColors.Window;
+            gbResultados.Controls.Add(lblImporte);
+            gbResultados.Controls.Add(lblMozo);
+            gbResultados.Controls.Add(btnMozoDelDia);
+            gbResultados.Controls.Add(lblTituloResultado);
+            gbResultados.Location = new Point(298, 229);
+            gbResultados.Name = "gbResultados";
+            gbResultados.Size = new Size(199, 229);
+            gbResultados.TabIndex = 9;
+            gbResultados.TabStop = false;
+            // 
+            // lblImporte
+            // 
+            lblImporte.AutoSize = true;
+            lblImporte.Font = new Font("Segoe UI Symbol", 9F, FontStyle.Bold);
+            lblImporte.Location = new Point(6, 79);
+            lblImporte.Name = "lblImporte";
+            lblImporte.Size = new Size(0, 15);
+            lblImporte.TabIndex = 17;
+            // 
+            // lblMozo
+            // 
+            lblMozo.AutoSize = true;
+            lblMozo.Font = new Font("Segoe UI Symbol", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblMozo.Location = new Point(6, 49);
+            lblMozo.Name = "lblMozo";
+            lblMozo.Size = new Size(0, 15);
+            lblMozo.TabIndex = 16;
             // 
             // btnMozoDelDia
             // 
-            btnMozoDelDia.Location = new Point(530, 70);
+            btnMozoDelDia.BackColor = SystemColors.MenuText;
+            btnMozoDelDia.ForeColor = SystemColors.Window;
+            btnMozoDelDia.Location = new Point(102, 187);
             btnMozoDelDia.Name = "btnMozoDelDia";
             btnMozoDelDia.Size = new Size(91, 29);
-            btnMozoDelDia.TabIndex = 2;
-            btnMozoDelDia.Text = "Mozo Del Día ";
-            btnMozoDelDia.UseVisualStyleBackColor = true;
+            btnMozoDelDia.TabIndex = 13;
+            btnMozoDelDia.Text = "Visualizar";
+            btnMozoDelDia.UseVisualStyleBackColor = false;
+            btnMozoDelDia.Click += btnMozoDelDia_Click_1;
             // 
-            // btnMostrarTotales
+            // lblTituloResultado
             // 
-            btnMostrarTotales.Location = new Point(530, 110);
-            btnMostrarTotales.Name = "btnMostrarTotales";
-            btnMostrarTotales.Size = new Size(91, 29);
-            btnMostrarTotales.TabIndex = 3;
-            btnMostrarTotales.Text = "Total Ventas";
-            btnMostrarTotales.UseVisualStyleBackColor = true;
+            lblTituloResultado.AutoSize = true;
+            lblTituloResultado.Location = new Point(6, 19);
+            lblTituloResultado.Name = "lblTituloResultado";
+            lblTituloResultado.Size = new Size(135, 15);
+            lblTituloResultado.TabIndex = 15;
+            lblTituloResultado.Text = "Mozo con mayor venta: ";
             // 
             // btnNuevoDia
             // 
-            btnNuevoDia.Location = new Point(530, 150);
+            btnNuevoDia.BackColor = SystemColors.MenuText;
+            btnNuevoDia.ForeColor = SystemColors.Window;
+            btnNuevoDia.Location = new Point(118, 183);
             btnNuevoDia.Name = "btnNuevoDia";
             btnNuevoDia.Size = new Size(91, 29);
-            btnNuevoDia.TabIndex = 4;
+            btnNuevoDia.TabIndex = 15;
             btnNuevoDia.Text = "Nuevo Día";
-            btnNuevoDia.UseVisualStyleBackColor = true;
+            btnNuevoDia.UseVisualStyleBackColor = false;
+            btnNuevoDia.Click += btnNuevoDia_Click_1;
+            // 
+            // btnMostrarTotales
+            // 
+            btnMostrarTotales.BackColor = SystemColors.MenuText;
+            btnMostrarTotales.ForeColor = SystemColors.Window;
+            btnMostrarTotales.Location = new Point(127, 416);
+            btnMostrarTotales.Name = "btnMostrarTotales";
+            btnMostrarTotales.Size = new Size(91, 29);
+            btnMostrarTotales.TabIndex = 14;
+            btnMostrarTotales.Text = "Total Ventas";
+            btnMostrarTotales.UseVisualStyleBackColor = false;
+            btnMostrarTotales.Click += btnMostrarTotales_Click_1;
+            // 
+            // btnValidarDatos
+            // 
+            btnValidarDatos.BackColor = SystemColors.MenuText;
+            btnValidarDatos.ForeColor = SystemColors.Window;
+            btnValidarDatos.Location = new Point(12, 183);
+            btnValidarDatos.Name = "btnValidarDatos";
+            btnValidarDatos.Size = new Size(91, 29);
+            btnValidarDatos.TabIndex = 12;
+            btnValidarDatos.Text = "Validar Datos";
+            btnValidarDatos.UseVisualStyleBackColor = false;
+            btnValidarDatos.Click += btnValidarDatos_Click_1;
             // 
             // frmBarLaMilanga
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(868, 492);
+            BackColor = Color.Maroon;
+            ClientSize = new Size(527, 501);
             Controls.Add(btnNuevoDia);
             Controls.Add(btnMostrarTotales);
-            Controls.Add(btnMozoDelDia);
             Controls.Add(btnValidarDatos);
+            Controls.Add(gbResultados);
+            Controls.Add(lstTotales);
             Controls.Add(dgvVentas);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Location = new Point(10, 10);
+            MaximizeBox = false;
             Name = "frmBarLaMilanga";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Bar La Milanga";
             ((System.ComponentModel.ISupportInitialize)dgvVentas).EndInit();
+            gbResultados.ResumeLayout(false);
+            gbResultados.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -155,9 +228,14 @@
         private DataGridViewTextBoxColumn colBebidaSAlch;
         private DataGridViewTextBoxColumn colBebidasCAlcohol;
         private DataGridViewTextBoxColumn colPostres;
-        private Button btnValidarDatos;
+        private ListBox lstTotales;
+        private GroupBox gbResultados;
+        private Label lblImporte;
+        private Label lblMozo;
         private Button btnMozoDelDia;
-        private Button btnMostrarTotales;
+        private Label lblTituloResultado;
         private Button btnNuevoDia;
+        private Button btnMostrarTotales;
+        private Button btnValidarDatos;
     }
 }
