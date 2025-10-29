@@ -66,7 +66,7 @@
             dgvVentas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvVentas.Columns.AddRange(new DataGridViewColumn[] { colMozo, colComida, colBebidaSAlch, colBebidasCAlcohol, colPostres });
             dgvVentas.GridColor = Color.GhostWhite;
-            dgvVentas.Location = new Point(10, 10);
+            dgvVentas.Location = new Point(12, 10);
             dgvVentas.Name = "dgvVentas";
             dgvVentas.RowHeadersVisible = false;
             dgvVentas.Size = new Size(504, 167);
